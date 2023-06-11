@@ -23,9 +23,7 @@ def uoc_ComputePoints(curve):
     num_points = 0
 
     #### IMPLEMENTATION GOES HERE ####
-    a = curve[0]
-    b = curve[1]
-    p = curve[2]
+    a, b, p = (curve[0], curve[1], curve[2])
     print(f'a = {a}, b = {b}, p = {p}')
 
     if 4 * pow(a, 3) + 27 * pow(b, 2) == 0 or p <= 3:
