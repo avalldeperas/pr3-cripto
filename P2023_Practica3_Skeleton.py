@@ -31,21 +31,17 @@ def uoc_ComputePoints(curve):
     if 4 * pow(a, 3) + 27 * pow(b, 2) == 0 or p <= 3:
         raise Exception("parameters are incorrect.")
 
-    # TODO: understand the list of values we expect as x.
-    values_in_p = list(range(-p, p))
-    print(values_in_p)
-    points = []
-    for i in range(len(values_in_p)):
-        x = values_in_p[i]
-        y = 0
-        y_pow2 = pow(x, 3) + a * x + b
-        if y_pow2 >= 0:
-            y = math.sqrt(y_pow2) % p
-        print(f'({x}, {y})')
-        points.append(y)
+    points = [P_INFINITY]
+    for x in range(p):
+        for y in range(p):
+            x_val = (pow(x, 3) + a * x + b)
+            y_val = pow(y, 2)
+            result = (y_val - x_val) % p
+            if result == 0:
+                points.append((x, y))
 
     num_points = len(points)
-    print(num_points)
+    print(f'size = {num_points}, points = {points}')
     # --------------------------------
 
     return num_points
