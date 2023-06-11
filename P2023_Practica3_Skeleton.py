@@ -34,8 +34,7 @@ def uoc_ComputePoints(curve):
         for y in range(p):
             x_val = (pow(x, 3) + a * x + b)
             y_val = pow(y, 2)
-            result = (y_val - x_val) % p
-            if result == 0:
+            if (y_val - x_val) % p == 0:
                 points.append((x, y))
 
     num_points = len(points)
