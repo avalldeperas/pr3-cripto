@@ -85,15 +85,15 @@ def uoc_AddPoints(curve, P, Q):
     suma = None
 
     #### IMPLEMENTATION GOES HERE ####
-    x1, y1 = (P[0], P[1])
-    x2, y2 = (Q[0], Q[1])
-    a, b, p = (curve[0], curve[1], curve[2])
-
     if P == P_INFINITY:
         return Q
 
     if Q == P_INFINITY:
         return P
+
+    x1, y1 = (P[0], P[1])
+    x2, y2 = (Q[0], Q[1])
+    a, b, p = (curve[0], curve[1], curve[2])
 
     if x1 != x2:  # pendent corba
         sc = mod((y1 - y2) * pow(x1 - x2, -1, p), p)
@@ -106,7 +106,7 @@ def uoc_AddPoints(curve, P, Q):
             x3 = mod(pow(st, 2, p) - 2 * x1, p)
             y3 = mod(st * (x1 - x3) - y1, p)
             suma = (x3, y3)
-        elif y1 == -y2:
+        elif y1 == -y2 or y1 != y2:
             suma = P_INFINITY
 
     # --------------------------------
@@ -126,7 +126,11 @@ def uoc_SelfProductPoint(curve, n, P):
     product = None
 
     #### IMPLEMENTATION GOES HERE ####
+    point = P
+    for i in range(n - 1):
+        point = uoc_AddPoints(curve, P, point)
 
+    product = point
     # --------------------------------
     return product
 
