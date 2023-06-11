@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 import math
 from decimal import Decimal
+from fractions import Fraction
 
 P_INFINITY = (None, None)
 
 
 # --- IMPLEMENTATION GOES HERE -----------------------------------------------
 #  Student helpers (functions, constants, etc.) can be defined here, if needed
-
+def mod(x, p):
+    return x % p
 
 # ----------------------------------------------------------------------------
 
@@ -83,6 +85,29 @@ def uoc_AddPoints(curve, P, Q):
     suma = None
 
     #### IMPLEMENTATION GOES HERE ####
+    x1, y1 = (P[0], P[1])
+    x2, y2 = (Q[0], Q[1])
+    a, b, p = (curve[0], curve[1], curve[2])
+
+    if P == P_INFINITY:
+        return Q
+
+    if Q == P_INFINITY:
+        return P
+
+    if x1 != x2:  # pendent corba
+        sc = mod((y1 - y2) * pow(x1 - x2, -1, p), p)
+        x3 = mod(pow(sc, 2, p) - x1 - x2, p)
+        y3 = mod(sc * (x1 - x3) - y1, p)
+        suma = (x3, y3)
+    else:
+        if y1 == y2 and y1 != 0:  # P = Q - tangent
+            st = mod((3 * pow(x1, 2, p) + a) * pow(2 * y1, -1, p), p)
+            x3 = mod(pow(st, 2, p) - 2 * x1, p)
+            y3 = mod(st * (x1 - x3) - y1, p)
+            suma = (x3, y3)
+        elif y1 == -y2:
+            suma = P_INFINITY
 
     # --------------------------------
     return suma
