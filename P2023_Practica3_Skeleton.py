@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import math
+import random
 from decimal import Decimal
 from fractions import Fraction
 
@@ -159,6 +160,9 @@ def uoc_IsGroup(curve):
 
     #### IMPLEMENTATION GOES HERE ####
     print(curve)
+    # 1) Agafar tots els Ps que estan a la corba
+    # 2) Agafar els Qs que estan a la corba
+    # 3) Sumar totes les parelles possibles i que totes les Rs també estiguin a la corba oi?
 
     # --------------------------------
     return result
@@ -192,7 +196,12 @@ def uoc_GenKey(curve, P):
     key = (None, None)
 
     #### IMPLEMENTATION GOES HERE ####
-
+    p = curve[2]
+    # generate private key that is a random number [1,p)
+    private_key = random.randint(1, p - 1)
+    # calculate public key, privKey * P
+    public_key = uoc_SelfProductPoint(curve, private_key, P)
+    key = (public_key, private_key)
     # --------------------------------
     return key
 
@@ -201,14 +210,15 @@ def uoc_SharedKey(curve, priv_user1, pub_user2):
     """
     EXERCISE 4.2: Generate a shared secret
     :curve: a list with the curve values [a, b, p]
-    :pub_user1: a public key
-    :pub_user2: a private key
+    :pub_user1: a private key
+    :pub_user2: a public key
     :return: shared secret
     """
 
     shared = None
 
     #### IMPLEMENTATION GOES HERE ####
-
+    # private key acts like scalar n and public key acts like the point P
+    shared = uoc_SelfProductPoint(curve, priv_user1, pub_user2)
     # --------------------------------
     return shared
