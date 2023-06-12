@@ -151,9 +151,7 @@ def uoc_IsGroup(curve):
     """
     EXERCISE 3.2: xxx
     :curve: check if the curve is a group
-    :n: constant to multiply
-    :P: a point as a pair (x, y)
-    :return: nP
+    :return: true if is group, false otherwise
     """
 
     result = None
@@ -180,7 +178,16 @@ def uoc_OrderPoint(curve, P):
     point_order = None
 
     #### IMPLEMENTATION GOES HERE ####
+    keep_loop = True
+    point_order = 0
 
+    # order is equal to the number of iterations we need to find P_INFINITY (first scalar that nP = 0)
+    while keep_loop:
+        point_order += 1
+        result = uoc_SelfProductPoint(curve, point_order, P)
+        keep_loop = result != P_INFINITY
+
+    print(f'order = {point_order}')
     # --------------------------------
     return point_order
 
