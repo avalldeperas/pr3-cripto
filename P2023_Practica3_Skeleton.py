@@ -113,20 +113,6 @@ def uoc_AddPoints(curve, P, Q):
     return suma
 
 
-def uoc_SelfProductPoint_v2(curve, n, P):
-    product = None
-
-    #### IMPLEMENTATION GOES HERE ####
-    # TODO: https://onyb.gitbook.io/secp256k1-python/scalar-multiplication-in-python
-    point = P
-
-    binary = bin(n)[2:]
-
-    product = P
-    # --------------------------------
-    return product
-
-
 def uoc_SelfProductPoint(curve, n, P):
     """
     EXERCISE 3.1: Multiplication of a scalar by a point
@@ -172,6 +158,7 @@ def uoc_IsGroup(curve):
     result = None
 
     #### IMPLEMENTATION GOES HERE ####
+    print(curve)
 
     # --------------------------------
     return result
