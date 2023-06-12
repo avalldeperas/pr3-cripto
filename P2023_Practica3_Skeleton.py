@@ -113,6 +113,20 @@ def uoc_AddPoints(curve, P, Q):
     return suma
 
 
+def uoc_SelfProductPoint_v2(curve, n, P):
+    product = None
+
+    #### IMPLEMENTATION GOES HERE ####
+    # TODO: https://onyb.gitbook.io/secp256k1-python/scalar-multiplication-in-python
+    point = P
+
+    binary = bin(n)[2:]
+
+    product = P
+    # --------------------------------
+    return product
+
+
 def uoc_SelfProductPoint(curve, n, P):
     """
     EXERCISE 3.1: Multiplication of a scalar by a point
@@ -126,11 +140,22 @@ def uoc_SelfProductPoint(curve, n, P):
     product = None
 
     #### IMPLEMENTATION GOES HERE ####
-    point = P
-    for i in range(n - 1):
-        point = uoc_AddPoints(curve, P, point)
+    # we'll use double and add method to also handle big scalar numbers
 
-    product = point
+    # first, calculate the binary expansion of scalar n and reverse it
+    binary_reversed = (bin(n)[2:])[::-1]
+
+    p_tmp = P
+    q = P_INFINITY
+    # iterate over each element of the binary reversed
+    for i in range(len(binary_reversed)):
+        # only if value is 1 we do the add
+        if binary_reversed[i] == "1":
+            q = uoc_AddPoints(curve, p_tmp, q)
+        # we double each time
+        p_tmp = uoc_AddPoints(curve, p_tmp, p_tmp)
+
+    product = q
     # --------------------------------
     return product
 
