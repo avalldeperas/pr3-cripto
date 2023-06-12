@@ -157,11 +157,9 @@ def uoc_IsGroup(curve):
     result = None
 
     #### IMPLEMENTATION GOES HERE ####
-    print(curve)
-    # 1) Agafar tots els Ps que estan a la corba
-    # 2) Agafar els Qs que estan a la corba
-    # 3) Sumar totes les parelles possibles i que totes les Rs també estiguin a la corba oi?
-
+    a, b, p = (curve[0], curve[1], curve[2])
+    condition = mod(4 * pow(a, 3) + 27 * pow(b, 2), p)
+    result = condition != 0
     # --------------------------------
     return result
 
