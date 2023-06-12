@@ -13,6 +13,7 @@ P_INFINITY = (None, None)
 def mod(x, p):
     return x % p
 
+
 # ----------------------------------------------------------------------------
 
 
@@ -27,17 +28,22 @@ def uoc_ComputePoints(curve):
 
     #### IMPLEMENTATION GOES HERE ####
     a, b, p = (curve[0], curve[1], curve[2])
-    print(f'a = {a}, b = {b}, p = {p}')
 
+    # validate the input
     if 4 * pow(a, 3) + 27 * pow(b, 2) == 0 or p <= 3:
         raise Exception("parameters are incorrect.")
 
     points = [P_INFINITY]
+    # for all possible x values
     for x in range(p):
+        # we then evaluate y values
         for y in range(p):
+            # we calculate right side of equation (x^3 + ax + b)
             x_val = (pow(x, 3) + a * x + b)
+            # we calculate left side of equation (y^2)
             y_val = pow(y, 2)
-            if (y_val - x_val) % p == 0:
+            # if differences are divisible by p, we add it to the list of points
+            if mod(y_val - x_val, p) == 0:
                 points.append((x, y))
 
     num_points = len(points)
@@ -60,6 +66,7 @@ def uoc_VerifyNumPoints(curve, n):
     #### IMPLEMENTATION GOES HERE ####
     p = curve[2]
 
+    # we verify n is not below 0
     if n < 0:
         return False
 
@@ -67,6 +74,7 @@ def uoc_VerifyNumPoints(curve, n):
     below = Decimal(p + 1 - 2 * math.sqrt(p))
     above = Decimal(p + 1 + 2 * math.sqrt(p))
 
+    # number of points is between 1+2-2sqrt(p) <= result <= 1+2+2sqrt(p)
     result = below <= Decimal(n) <= above
     # --------------------------------
 
@@ -86,28 +94,28 @@ def uoc_AddPoints(curve, P, Q):
     suma = None
 
     #### IMPLEMENTATION GOES HERE ####
-    if P == P_INFINITY:
-        return Q
-
-    if Q == P_INFINITY:
-        return P
-
     x1, y1 = (P[0], P[1])
     x2, y2 = (Q[0], Q[1])
     a, b, p = (curve[0], curve[1], curve[2])
 
-    if x1 != x2:  # pendent corba
+    if P == P_INFINITY:  # 0Q = Q
+        return Q
+    if Q == P_INFINITY:  # P0 = P
+        return P
+
+    # Rules for the sum of eliptic curve points
+    if x1 != x2:  # 1. use curve slope
         sc = mod((y1 - y2) * pow(x1 - x2, -1, p), p)
         x3 = mod(pow(sc, 2, p) - x1 - x2, p)
         y3 = mod(sc * (x1 - x3) - y1, p)
         suma = (x3, y3)
     else:
-        if y1 == y2 and y1 != 0:  # P = Q - tangent
+        if y1 == y2 and y1 != 0:  # 2. use tangent method (P=Q)
             st = mod((3 * pow(x1, 2, p) + a) * pow(2 * y1, -1, p), p)
             x3 = mod(pow(st, 2, p) - 2 * x1, p)
             y3 = mod(st * (x1 - x3) - y1, p)
             suma = (x3, y3)
-        elif y1 == -y2 or y1 != y2:
+        elif y1 == -y2 or y1 != y2:  # 3. PQ = 0
             suma = P_INFINITY
 
     # --------------------------------
@@ -158,8 +166,10 @@ def uoc_IsGroup(curve):
 
     #### IMPLEMENTATION GOES HERE ####
     a, b, p = (curve[0], curve[1], curve[2])
-    condition = mod(4 * pow(a, 3) + 27 * pow(b, 2), p)
-    result = condition != 0
+
+    # as defined in ex1, a,b need to satisfy 4a^3 +27b^2 != 0
+    result = mod(4 * pow(a, 3) + 27 * pow(b, 2), p) != 0
+    print(f'is group? {result}')
     # --------------------------------
     return result
 
@@ -182,7 +192,11 @@ def uoc_OrderPoint(curve, P):
     # order is equal to the number of iterations we need to find P_INFINITY (first scalar that nP = 0)
     while keep_loop:
         point_order += 1
+        # we calculate each nP
         result = uoc_SelfProductPoint(curve, point_order, P)
+        # check if current nP is infinity.
+        #  - true we stop and point_order is the order
+        #  - false we keep looping
         keep_loop = result != P_INFINITY
 
     print(f'order = {point_order}')
